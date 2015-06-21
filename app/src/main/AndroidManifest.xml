@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.com.thiengo.tcmaterialdesign">
+
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.MyTheme">
+
+
+        <meta-data android:name="android.app.default_searchable"
+            android:value="br.com.thiengo.tcmaterialdesign.SearchableActivity"/>
+
+        <provider
+            android:authorities="br.com.thiengo.tcmaterialdesign.provider.SearchableProvider"
+            android:name="br.com.thiengo.tcmaterialdesign.provider.SearchableProvider" />
+
+        <activity
+            android:windowSoftInputMode="adjustPan|adjustNothing"
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".SecondActivity"
+            android:label="@string/title_activity_second"></activity>
+        <activity
+            android:windowSoftInputMode="adjustPan|adjustNothing"
+            android:name=".CarActivity"
+            android:label="@string/title_activity_car"></activity>
+        <activity
+            android:name=".TransitionActivity_A"
+            android:label="@string/title_activity_transition"></activity>
+        <activity
+            android:name=".TransitionActivity_B"
+            android:label="@string/title_activity_transition"></activity>
+
+        <activity
+            android:windowSoftInputMode="adjustPan|adjustNothing"
+            android:name="br.com.thiengo.tcmaterialdesign.SearchableActivity"
+            android:label="@string/title_activity_transition"
+            android:launchMode="singleTop">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+
+        </activity>
+    </application>
+
+</manifest>

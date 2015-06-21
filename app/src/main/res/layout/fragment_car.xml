@@ -1,0 +1,89 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.com.thiengo.tcmaterialdesign.fragments.CarFragment">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_list"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+    <!-- com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        fab:menu_icon="@drawable/ic_plus"
+        fab:menu_colorNormal="@color/colorFAB"
+        fab:menu_colorPressed="@color/colorFABPressed"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_facebook_white"
+            fab:fab_size="mini"
+            fab:fab_label="Facebook"
+            fab:fab_colorNormal="@color/colorFAB"
+            fab:fab_colorPressed="@color/colorFABPressed"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_google_plus_white"
+            fab:fab_size="mini"
+            fab:fab_label="Google Plus"
+            fab:fab_colorNormal="@color/colorFAB"
+            fab:fab_colorPressed="@color/colorFABPressed"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_youtube_white"
+            fab:fab_size="mini"
+            fab:fab_label="YouTube"
+            fab:fab_colorNormal="@color/colorFAB"
+            fab:fab_colorPressed="@color/colorFABPressed"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_linkedin_white"
+            fab:fab_size="mini"
+            fab:fab_label="LinkedIn"
+            fab:fab_colorNormal="@color/colorFAB"
+            fab:fab_colorPressed="@color/colorFABPressed"/>
+
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_whatsapp_white"
+            fab:fab_size="mini"
+            fab:fab_label="WhatsApp"
+            fab:fab_colorNormal="@color/colorFAB"
+            fab:fab_colorPressed="@color/colorFABPressed"/>
+
+    </com.github.clans.fab.FloatingActionMenu -->
+
+</FrameLayout>

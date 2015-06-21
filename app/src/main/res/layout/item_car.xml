@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="20dp"
+    android:paddingLeft="16dp">
+
+    <!-- ImageView
+        android:layout_alignParentLeft="true"
+        android:id="@+id/iv_car"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="6dp"
+        android:scaleType="centerCrop"
+        android:src="@null" / -->
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_car"
+        android:layout_alignParentLeft="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="6dp"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@drawable/loading_img"
+        fresco:failureImage="@drawable/error_img"
+        fresco:retryImage="@drawable/retry_img"/>
+
+    <TextView
+        android:textColor="@color/colorPrimarytext"
+        android:layout_toRightOf="@+id/iv_car"
+        android:id="@+id/tv_model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:paddingRight="16dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:textColor="@color/colorPrimarytext"
+        android:layout_below="@+id/tv_model"
+        android:layout_alignLeft="@+id/tv_model"
+        android:id="@+id/tv_brand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="16dp"
+        android:textSize="12sp" />
+
+    <View
+        android:id="@+id/vw_divider"
+        android:layout_marginTop="20dp"
+        android:layout_alignLeft="@+id/tv_model"
+        android:layout_below="@+id/tv_brand"
+        android:background="@color/colorDivider"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp" />
+
+</RelativeLayout>

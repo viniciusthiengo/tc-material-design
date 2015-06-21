@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">TCMaterialDesign</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_second">SecondActivity</string>
+    <string name="action_second_activity">SecondActivity</string>
+    <string name="action_facebook">Facebook</string>
+    <string name="action_youtube">YouTube</string>
+    <string name="action_google_plus">Google Plus</string>
+    <string name="action_linkedin">LinkedIn</string>
+    <string name="action_whatsapp">WhatsApp</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="navigation_drawer_open">opened</string>
+    <string name="navigation_drawer_close">closed</string>
+    <string name="title_activity_car">CarActivity</string>
+    <string name="action_transition_activity">Transition</string>
+    <string name="title_activity_transition">TransitionActivity</string>
+    <string name="title_activity_ksochiro">KsochiroActivity</string>
+    <string name="action_ksochiro_activity">Ksochiro</string>
+    <string name="app_label">TCMaterialDesign</string>
+    <string name="searchable_activity">SearchableActivity</string>
+    <string name="search_hint">Buscar carros</string>
+    <string name="action_searchable_activity">Buscar carros</string>
+    <string name="delete_historic">Deletar Histórico</string>
+    <string name="action_delete">Rremover cookie</string>
+</resources>
