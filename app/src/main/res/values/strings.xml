@@ -26,4 +26,5 @@
     <string name="action_searchable_activity">Buscar carros</string>
     <string name="delete_historic">Deletar Histórico</string>
     <string name="action_delete">Rremover cookie</string>
+    <string name="title_activity_car_widget">CarWidgetConfigurationActivity</string>
 </resources>

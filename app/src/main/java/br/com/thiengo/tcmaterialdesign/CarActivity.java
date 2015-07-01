@@ -52,6 +52,7 @@ public class CarActivity extends AppCompatActivity {
     private MaterialDialog mMaterialDialog;
     private TextView tvDescription;
     private ViewGroup mRoot;
+    private boolean isUsingTransition = false;
 
 
     @Override
@@ -75,7 +76,7 @@ public class CarActivity extends AppCompatActivity {
                 transition1.addListener(new Transition.TransitionListener() {
                     @Override
                     public void onTransitionStart(Transition transition) {
-
+                        isUsingTransition = true;
                     }
 
                     @Override
@@ -188,7 +189,7 @@ public class CarActivity extends AppCompatActivity {
         tvModel.setText(car.getModel());
         tvBrand.setText(car.getBrand());
         tvDescription.setText(car.getDescription());
-        tvDescription.setVisibility(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || savedInstanceState != null ? View.VISIBLE : View.INVISIBLE);
+        tvDescription.setVisibility(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || savedInstanceState != null || !isUsingTransition ? View.VISIBLE : View.INVISIBLE);
 
         navigationDrawerLeft = new Drawer()
             .withActivity(this)

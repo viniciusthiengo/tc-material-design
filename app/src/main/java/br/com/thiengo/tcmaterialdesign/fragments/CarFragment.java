@@ -1,6 +1,7 @@
 package br.com.thiengo.tcmaterialdesign.fragments;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -39,6 +41,7 @@ import br.com.thiengo.tcmaterialdesign.adapters.CarAdapter;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
 import br.com.thiengo.tcmaterialdesign.extras.UtilTCM;
 import br.com.thiengo.tcmaterialdesign.interfaces.RecyclerViewOnClickListenerHack;
+import de.greenrobot.event.EventBus;
 
 public class CarFragment extends Fragment implements RecyclerViewOnClickListenerHack, View.OnClickListener {
     protected static final String TAG = "LOG";
@@ -49,6 +52,7 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
     //protected FloatingActionMenu fab;
     protected android.support.design.widget.FloatingActionButton fab;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
+    protected Activity mActivity;
 
 
     @Override
@@ -62,6 +66,30 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
             mList = ((MainActivity) getActivity()).getCarsByCategory(0);
         }
     }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        EventBus.getDefault().register(this);
+        mActivity = activity;
+    }
+
+
+    public void onEvent(Car car){
+        for(int i = 0; i < mList.size(); i++){
+            if( mList.get(i).getUrlPhoto().equalsIgnoreCase( car.getUrlPhoto() )
+                && this.getClass().getName().equalsIgnoreCase( CarFragment.class.getName() )){
+
+                Intent it = new Intent(mActivity, CarActivity.class);
+                it.putExtra("car", mList.get(i));
+                mActivity.startActivity(it);
+                break;
+            }
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,

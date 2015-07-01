@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
@@ -36,13 +37,19 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import br.com.thiengo.tcmaterialdesign.adapters.TabsAdapter;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
 import br.com.thiengo.tcmaterialdesign.domain.Person;
 import br.com.thiengo.tcmaterialdesign.extras.SlidingTabLayout;
+import br.com.thiengo.tcmaterialdesign.provider.CarWidgetProvider;
+import de.greenrobot.event.EventBus;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -176,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
+
             // BODY
                 navigationDrawerLeft = new Drawer()
                     .withActivity(this)
@@ -185,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                     .withDrawerGravity(Gravity.START)
                     .withSavedInstance(savedInstanceState)
                     .withActionBarDrawerToggle(true)
-                    .withAccountHeader(headerNavigationLeft)
+                        .withAccountHeader(headerNavigationLeft)
                     .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem) {
@@ -239,6 +247,19 @@ public class MainActivity extends AppCompatActivity {
             //fab = (FloatingActionMenu) findViewById(R.id.fab);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if( getIntent() != null && getIntent().getStringExtra( CarWidgetProvider.FILTER_CAR_ITEM ) != null ){
+            Car car = new Car();
+            car.setUrlPhoto( getIntent().getStringExtra( CarWidgetProvider.FILTER_CAR_ITEM ) );
+            setIntent(null);
+
+            EventBus.getDefault().post( car );
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

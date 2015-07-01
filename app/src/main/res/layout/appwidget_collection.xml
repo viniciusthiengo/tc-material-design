@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:padding="@dimen/appwidget_padding">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+        <TextView
+            android:text="Carros APP"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="20sp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/iv_update_collection"
+            android:layout_toLeftOf="@+id/iv_open_app"
+            android:layout_centerVertical="true"
+            android:layout_width="24dp"
+            android:src="@drawable/ic_load"
+            android:layout_height="24dp"
+            android:layout_marginRight="10dp"/>
+
+        <ImageView
+            android:id="@+id/iv_open_app"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="24dp"
+            android:src="@drawable/ic_open"
+            android:layout_height="24dp" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_collection"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></ListView>
+
+    <TextView
+        android:gravity="center"
+        android:text="Carregando..."
+        android:textColor="@android:color/white"
+        android:id="@+id/tv_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

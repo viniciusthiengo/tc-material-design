@@ -15,7 +15,7 @@
         android:layout_margin="8dp"
         android:elevation="4dp"
         android:background="@drawable/shadow"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat" />
 
     <TextView
         android:id="@+id/tv_hw"
