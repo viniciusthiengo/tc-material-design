@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 22
@@ -28,22 +29,18 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.1@aar'
     compile 'com.daimajia.androidanimations:library:1.1.3@aar'
-
     compile('com.mikepenz.materialdrawer:library:2.8.2@aar') {
         transitive = true
     }
-
     //compile 'com.melnykov:floatingactionbutton:1.3.0'
     //compile 'com.github.shell-software:fab:1.0.5'
     //compile 'com.github.clans:fab:1.4.0'
-
     compile 'me.drakeet.materialdialog:library:1.2.2'
     //compile 'com.nispok:snackbar:2.10.10'
-
     compile 'com.android.support:design:22.2.0'
-
     compile 'com.facebook.fresco:fresco:0.5.1+'
-
     compile 'com.github.bumptech.glide:glide:3.6.0'
     compile 'de.greenrobot:eventbus:2.4.0'
+
+    compile 'com.google.android.gms:play-services:7.5.+'
 }

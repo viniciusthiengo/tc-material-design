@@ -1,9 +1,14 @@
 package br.com.thiengo.tcmaterialdesign;
 
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -30,6 +35,8 @@ import android.widget.Toast;
 
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.appinvite.AppInviteReferral;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -69,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
 
+    public static final int REQUEST_INVITE = 78;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +109,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             listCars = getSetCarList(50);
+
+            if( AppInviteReferral.hasReferral( getIntent() ) ){
+                launchInviteCall( getIntent() );
+            }
         }
 
         // TOOLBAR
@@ -199,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem) {
                             mViewPager.setCurrentItem( i );
 
+
                             /*Fragment frag = null;
                             mItemDrawerSelected = i;
 
@@ -238,6 +252,8 @@ public class MainActivity extends AppCompatActivity {
                 if(listCatefories != null && listCatefories.size() > 0){
                     for( int i = 0; i < listCatefories.size(); i++ ){
                         navigationDrawerLeft.addItem( listCatefories.get(i) );
+
+                        //navigationDrawerLeft.get
                     }
                     navigationDrawerLeft.setSelection(mItemDrawerSelected);
                 }
@@ -246,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
         // FLOATING ACTION BUTTON
             //fab = (FloatingActionMenu) findViewById(R.id.fab);
     }
+
 
 
     @Override
@@ -260,6 +277,8 @@ public class MainActivity extends AppCompatActivity {
             EventBus.getDefault().post( car );
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -433,4 +452,58 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerInviteReceiver();
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterInviteReceiver();
+    }
+
+
+    // APP INVITE
+    private BroadcastReceiver mInviteReceiver;
+
+    private void registerInviteReceiver(){
+        mInviteReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if( AppInviteReferral.hasReferral( intent ) ){
+                    launchInviteCall( intent );
+                }
+            }
+        };
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mInviteReceiver, new IntentFilter("deepLink"));
+    }
+
+
+    private void unregisterInviteReceiver(){
+        if( mInviteReceiver != null ){
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mInviteReceiver);
+        }
+    }
+
+
+    private void launchInviteCall( Intent intent ){
+        Intent it = new Intent(intent).setClass(this, CarActivity.class);
+
+        for( int i = 0, tamI = listCars.size(); i < tamI; i++ ){
+            if( intent.toString().indexOf( listCars.get(i).getBrand() ) > -1
+                && intent.toString().indexOf( listCars.get(i).getModel() ) > -1 ){
+                it.putExtra("car", listCars.get(i));
+                break;
+            }
+        }
+
+        startActivity(it);
+    }
+
 }

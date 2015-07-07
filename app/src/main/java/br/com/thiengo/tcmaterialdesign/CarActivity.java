@@ -2,8 +2,10 @@ package br.com.thiengo.tcmaterialdesign;
 
 import android.app.Activity;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
@@ -37,6 +39,11 @@ import android.widget.Toast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.mikepenz.materialdrawer.Drawer;
 
 import br.com.thiengo.tcmaterialdesign.domain.Car;
@@ -44,7 +51,8 @@ import br.com.thiengo.tcmaterialdesign.extras.DataUrl;
 import me.drakeet.materialdialog.MaterialDialog;
 
 
-public class CarActivity extends AppCompatActivity {
+public class CarActivity extends AppCompatActivity{
+
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Car car;
@@ -53,6 +61,8 @@ public class CarActivity extends AppCompatActivity {
     private TextView tvDescription;
     private ViewGroup mRoot;
     private boolean isUsingTransition = false;
+
+    private GoogleApiClient mGoogleApiClient;
 
 
     @Override
@@ -113,7 +123,8 @@ public class CarActivity extends AppCompatActivity {
         else {
             if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().getParcelable("car") != null) {
                 car = getIntent().getExtras().getParcelable("car");
-            } else {
+            }
+            else {
                 Toast.makeText(this, "Fail!", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -208,15 +219,37 @@ public class CarActivity extends AppCompatActivity {
             .build();
 
         // FAB
+        // keytool -list -v -keystore /Users/viniciusthiengo/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CarActivity.this, "FAB clicked", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(CarActivity.this, "FAB clicked", Toast.LENGTH_SHORT).show();
+                    inviteCall();
                 }
             });
     }
 
+
+    private void inviteCall(){
+        Intent intent = new AppInviteInvitation.IntentBuilder("TCMaterialDesign")
+                .setMessage("Vc precisa baixar essa APP, ela é demais!")
+                .setDeepLink( Uri.parse(car.getBrand() + "/" + car.getModel())  )
+                .build();
+
+        startActivityForResult(intent, MainActivity.REQUEST_INVITE);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if( requestCode == MainActivity.REQUEST_INVITE){
+            if( resultCode == RESULT_OK ){
+                String ids[] = AppInviteInvitation.getInvitationIds(resultCode, data);
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
