@@ -43,4 +43,6 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
 
     compile 'com.google.android.gms:play-services:7.5.+'
+
+    compile 'com.wdullaer:materialdatetimepicker:1.4.1'
 }

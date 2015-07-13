@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
@@ -12,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -45,13 +47,20 @@ import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.mikepenz.materialdrawer.Drawer;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
 import br.com.thiengo.tcmaterialdesign.domain.Car;
 import br.com.thiengo.tcmaterialdesign.extras.DataUrl;
 import me.drakeet.materialdialog.MaterialDialog;
 
 
-public class CarActivity extends AppCompatActivity{
+public class CarActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, DialogInterface.OnCancelListener {
 
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -62,7 +71,8 @@ public class CarActivity extends AppCompatActivity{
     private ViewGroup mRoot;
     private boolean isUsingTransition = false;
 
-    private GoogleApiClient mGoogleApiClient;
+    private TextView tvTestDrive;
+    private Button btTestDrive;
 
 
     @Override
@@ -131,7 +141,7 @@ public class CarActivity extends AppCompatActivity{
         }
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        mCollapsingToolbarLayout.setTitle(car.getModel() );
+        mCollapsingToolbarLayout.setTitle(car.getModel());
 
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle(car.getModel());
@@ -140,6 +150,16 @@ public class CarActivity extends AppCompatActivity{
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
+
+        tvTestDrive = (TextView) findViewById(R.id.tv_test_drive);
+        btTestDrive = (Button) findViewById(R.id.bt_test_drive);
+        btTestDrive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scheduleTestDrive(v);
+            }
+        });
+
 
         mRoot = (ViewGroup) findViewById(R.id.ll_tv_description);
         tvDescription = (TextView) findViewById(R.id.tv_description);
@@ -230,17 +250,6 @@ public class CarActivity extends AppCompatActivity{
             });
     }
 
-
-    private void inviteCall(){
-        Intent intent = new AppInviteInvitation.IntentBuilder("TCMaterialDesign")
-                .setMessage("Vc precisa baixar essa APP, ela é demais!")
-                .setDeepLink( Uri.parse(car.getBrand() + "/" + car.getModel())  )
-                .build();
-
-        startActivityForResult(intent, MainActivity.REQUEST_INVITE);
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -272,7 +281,6 @@ public class CarActivity extends AppCompatActivity{
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -282,13 +290,11 @@ public class CarActivity extends AppCompatActivity{
         return true;
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("car", car);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -299,4 +305,116 @@ public class CarActivity extends AppCompatActivity{
 
         super.onBackPressed();
     }
+
+
+    private void inviteCall(){
+        Intent intent = new AppInviteInvitation.IntentBuilder("TCMaterialDesign")
+                .setMessage("Vc precisa baixar essa APP, ela é demais!")
+                .setDeepLink( Uri.parse(car.getBrand() + "/" + car.getModel())  )
+                .build();
+
+        startActivityForResult(intent, MainActivity.REQUEST_INVITE);
+    }
+
+
+    // TEST DRIVE
+        private int year, month, day, hour, minute;
+
+        public void scheduleTestDrive(View view){
+            initDateTimeData();
+            Calendar cDefault = Calendar.getInstance();
+            cDefault.set(year, month, day);
+
+            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                    this,
+                    cDefault.get(Calendar.YEAR),
+                    cDefault.get(Calendar.MONTH),
+                    cDefault.get(Calendar.DAY_OF_MONTH)
+            );
+
+            Calendar cMin = Calendar.getInstance();
+            Calendar cMax = Calendar.getInstance();
+            cMax.set( cMax.get(Calendar.YEAR), 11, 31 );
+            datePickerDialog.setMinDate(cMin);
+            datePickerDialog.setMaxDate(cMax);
+
+            List<Calendar> daysList = new LinkedList<>();
+            Calendar[] daysArray;
+            Calendar cAux = Calendar.getInstance();
+
+            while( cAux.getTimeInMillis() <= cMax.getTimeInMillis() ){
+                if( cAux.get( Calendar.DAY_OF_WEEK ) != 1 && cAux.get( Calendar.DAY_OF_WEEK ) != 7 ){
+                    Calendar c = Calendar.getInstance();
+                    c.setTimeInMillis( cAux.getTimeInMillis() );
+
+                    daysList.add( c );
+                }
+                cAux.setTimeInMillis( cAux.getTimeInMillis() + ( 24 * 60 * 60 * 1000 ) );
+            }
+            daysArray = new Calendar[ daysList.size() ];
+            for( int i = 0; i < daysArray.length; i++ ){
+                daysArray[i] = daysList.get(i);
+            }
+
+            datePickerDialog.setSelectableDays( daysArray );
+            datePickerDialog.setOnCancelListener(this);
+            datePickerDialog.show( getFragmentManager(), "DatePickerDialog" );
+        }
+
+        private void initDateTimeData(){
+            if( year == 0 ){
+                Calendar c = Calendar.getInstance();
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                day = c.get(Calendar.DAY_OF_MONTH);
+                hour = c.get(Calendar.HOUR_OF_DAY);
+                minute = c.get(Calendar.MINUTE);
+            }
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            year = month = day = hour = minute = 0;
+            tvTestDrive.setText("");
+        }
+
+        @Override
+        public void onDateSet(DatePickerDialog datePickerDialog, int i, int i1, int i2) {
+            Calendar tDefault = Calendar.getInstance();
+            tDefault.set(year, month, day, hour, minute);
+
+            year = i;
+            month = i1;
+            day = i2;
+
+            TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                    this,
+                    tDefault.get(Calendar.HOUR_OF_DAY),
+                    tDefault.get(Calendar.MINUTE),
+                    true
+            );
+            timePickerDialog.setOnCancelListener(this);
+            timePickerDialog.show(getFragmentManager(), "timePickerDialog");
+            timePickerDialog.setTitle("Horário Test Drive");
+
+            timePickerDialog.setThemeDark(true);
+        }
+
+        @Override
+        public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i1) {
+            if( i < 9 || i > 18 ){
+                onDateSet(null, year, month, day);
+                Toast.makeText(this, "Somente entre 9h e 18h", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            hour = i;
+            minute = i1;
+
+            tvTestDrive.setText( (day < 10 ? "0"+day : day)+"/"+
+                    (month+1 < 10 ? "0"+(month+1) : month+1)+"/"+
+                    year+" às "+
+                    (hour < 10 ? "0"+hour : hour)+"h"+
+                    (minute < 10 ? "0"+minute : minute));
+        }
 }

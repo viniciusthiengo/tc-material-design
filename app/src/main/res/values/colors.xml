@@ -16,4 +16,8 @@
 
     <color name="colorFAB">#FF9800</color>
     <color name="colorFABPressed">#F57C00</color>
+
+
+    <color name="mdtp_accent_color">#009688</color>
+    <color name="mdtp_accent_color_dark">#00796B</color>
 </resources>

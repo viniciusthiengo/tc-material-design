@@ -26,11 +26,14 @@ import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.List;
 import java.util.Random;
 
 import br.com.thiengo.tcmaterialdesign.R;
+import br.com.thiengo.tcmaterialdesign.application.CustomApplication;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
 import br.com.thiengo.tcmaterialdesign.extras.DataUrl;
 import br.com.thiengo.tcmaterialdesign.extras.ImageHelper;
@@ -222,7 +225,7 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.MyViewHolder> {
         @Override
         public void onClick(View v) {
             if(mRecyclerViewOnClickListenerHack != null){
-                mRecyclerViewOnClickListenerHack.onClickListener(v, getPosition());
+                mRecyclerViewOnClickListenerHack.onClickListener(v, getAdapterPosition());
             }
         }
     }

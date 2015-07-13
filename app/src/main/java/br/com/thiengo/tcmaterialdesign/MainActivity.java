@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -37,18 +38,33 @@ import android.widget.Toast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.CredentialRequest;
+import com.google.android.gms.auth.api.credentials.CredentialRequestResult;
+import com.google.android.gms.auth.api.credentials.CredentialsApi;
+import com.google.android.gms.auth.api.credentials.IdentityProviders;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import br.com.thiengo.tcmaterialdesign.adapters.TabsAdapter;
@@ -65,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private Drawer.Result navigationDrawerLeft;
     private AccountHeader.Result headerNavigationLeft;
-    //private FloatingActionMenu fab;
     private int mItemDrawerSelected;
     private int mProfileDrawerSelected;
 
@@ -259,26 +274,32 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-        // FLOATING ACTION BUTTON
-            //fab = (FloatingActionMenu) findViewById(R.id.fab);
+        // CREDENTIALS
+        /*mCredentialsClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Auth.CREDENTIALS_API)
+                .build();
+
+        mCredentialRequest = new CredentialRequest.Builder()
+                .setSupportsPasswordLogin(true)
+                .setAccountTypes(IdentityProviders.GOOGLE, IdentityProviders.TWITTER, IdentityProviders.FACEBOOK, IdentityProviders.LINKEDIN)
+                .build();
+
+        Auth.CredentialsApi.request(mCredentialsClient, mCredentialRequest).setResultCallback(
+            new ResultCallback<CredentialRequestResult>() {
+                @Override
+                public void onResult(CredentialRequestResult credentialRequestResult) {
+                    if (credentialRequestResult.getStatus().isSuccess()) {
+                        // See "Handle successful credential requests"
+                        onCredentialRetrieved(credentialRequestResult.getCredential());
+                    } else {
+                        // See "Handle unsuccessful and incomplete credential requests"
+                        resolveResult(credentialRequestResult.getStatus(), RC_READ);
+                    }
+                }
+            });*/
     }
-
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if( getIntent() != null && getIntent().getStringExtra( CarWidgetProvider.FILTER_CAR_ITEM ) != null ){
-            Car car = new Car();
-            car.setUrlPhoto( getIntent().getStringExtra( CarWidgetProvider.FILTER_CAR_ITEM ) );
-            setIntent(null);
-
-            EventBus.getDefault().post( car );
-        }
-    }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -301,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -312,7 +332,56 @@ public class MainActivity extends AppCompatActivity {
         else if(id == R.id.action_transition_activity){
             startActivity(new Intent(this, TransitionActivity_A.class));
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("mItemDrawerSelected", mItemDrawerSelected);
+        outState.putInt("mProfileDrawerSelected", mProfileDrawerSelected);
+        outState.putParcelableArrayList("listCars", (ArrayList<Car>) listCars);
+        outState = navigationDrawerLeft.saveInstanceState(outState);
+        outState = headerNavigationLeft.saveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerInviteReceiver();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if( getIntent() != null && getIntent().getStringExtra( CarWidgetProvider.FILTER_CAR_ITEM ) != null ){
+            Car car = new Car();
+            car.setUrlPhoto(getIntent().getStringExtra(CarWidgetProvider.FILTER_CAR_ITEM));
+            setIntent(null);
+
+            EventBus.getDefault().post(car);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterInviteReceiver();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(navigationDrawerLeft.isDrawerOpen()){
+            navigationDrawerLeft.closeDrawer();
+        }
+        /*else if(fab.isOpened()){
+            fab.close(true);
+        }*/
+        else{
+            super.onBackPressed();
+        }
     }
 
 
@@ -336,7 +405,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return(list);
         }
-
 
 
     // PERSON
@@ -381,7 +449,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return( -1 );
         }
-
 
 
     // CAR
@@ -430,69 +497,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt("mItemDrawerSelected", mItemDrawerSelected);
-        outState.putInt("mProfileDrawerSelected", mProfileDrawerSelected);
-        outState.putParcelableArrayList("listCars", (ArrayList<Car>) listCars);
-        outState = navigationDrawerLeft.saveInstanceState(outState);
-        outState = headerNavigationLeft.saveInstanceState(outState);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(navigationDrawerLeft.isDrawerOpen()){
-            navigationDrawerLeft.closeDrawer();
-        }
-        /*else if(fab.isOpened()){
-            fab.close(true);
-        }*/
-        else{
-            super.onBackPressed();
-        }
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        registerInviteReceiver();
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterInviteReceiver();
-    }
-
-
     // APP INVITE
-    private BroadcastReceiver mInviteReceiver;
+        private BroadcastReceiver mInviteReceiver;
 
-    private void registerInviteReceiver(){
-        mInviteReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if( AppInviteReferral.hasReferral( intent ) ){
-                    launchInviteCall( intent );
+        private void registerInviteReceiver(){
+            mInviteReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if( AppInviteReferral.hasReferral( intent ) ){
+                        launchInviteCall( intent );
+                    }
                 }
-            }
-        };
+            };
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mInviteReceiver, new IntentFilter("deepLink"));
-    }
-
-
-    private void unregisterInviteReceiver(){
-        if( mInviteReceiver != null ){
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(mInviteReceiver);
+            LocalBroadcastManager.getInstance(this).registerReceiver(mInviteReceiver, new IntentFilter("deepLink"));
         }
-    }
 
+        private void unregisterInviteReceiver(){
+            if( mInviteReceiver != null ){
+                LocalBroadcastManager.getInstance(this).unregisterReceiver(mInviteReceiver);
+            }
+        }
 
-    private void launchInviteCall( Intent intent ){
+        private void launchInviteCall( Intent intent ){
         Intent it = new Intent(intent).setClass(this, CarActivity.class);
 
         for( int i = 0, tamI = listCars.size(); i < tamI; i++ ){
@@ -505,5 +532,4 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(it);
     }
-
 }
