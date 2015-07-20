@@ -2,21 +2,39 @@ package br.com.thiengo.tcmaterialdesign.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v7.widget.ListPopupWindow;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsSpinner;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -29,12 +47,16 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import br.com.thiengo.tcmaterialdesign.CarActivity;
 import br.com.thiengo.tcmaterialdesign.R;
 import br.com.thiengo.tcmaterialdesign.application.CustomApplication;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
+import br.com.thiengo.tcmaterialdesign.domain.ContextMenuItem;
 import br.com.thiengo.tcmaterialdesign.extras.DataUrl;
 import br.com.thiengo.tcmaterialdesign.extras.ImageHelper;
 import br.com.thiengo.tcmaterialdesign.interfaces.RecyclerViewOnClickListenerHack;
@@ -95,7 +117,6 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.MyViewHolder> {
 
         myViewHolder.tvModel.setText(mList.get(position).getModel());
         myViewHolder.tvBrand.setText(mList.get(position).getBrand());
-
 
         ControllerListener listener = new BaseControllerListener(){
             @Override
@@ -163,17 +184,6 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.MyViewHolder> {
         myViewHolder.ivCar.setController(dc);
         myViewHolder.ivCar.getHierarchy().setRoundingParams( rp );
 
-        /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            myViewHolder.ivCar.setImageResource(mList.get(position).getPhoto());
-        }
-        else{
-            Bitmap bitmap = BitmapFactory.decodeResource( mContext.getResources(), mList.get(position).getPhoto());
-            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
-
-            bitmap = ImageHelper.getRoundedCornerBitmap(mContext, bitmap, 4, width, height, false, false, true, true);
-            myViewHolder.ivCar.setImageBitmap(bitmap);
-        }*/
-
         if(withAnimation){
             try{
                 YoYo.with(Techniques.Tada)
@@ -211,6 +221,7 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.MyViewHolder> {
         public SimpleDraweeView ivCar;
         public TextView tvModel;
         public TextView tvBrand;
+        public ImageView ivContextMenu;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -218,15 +229,43 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.MyViewHolder> {
             ivCar = (SimpleDraweeView) itemView.findViewById(R.id.iv_car);
             tvModel = (TextView) itemView.findViewById(R.id.tv_model);
             tvBrand = (TextView) itemView.findViewById(R.id.tv_brand);
+            ivContextMenu = (ImageView) itemView.findViewById(R.id.iv_context_menu);
 
-            itemView.setOnClickListener(this);
+            if( ivContextMenu != null ){
+                ivContextMenu.setOnClickListener(this);
+            }
         }
+
 
         @Override
         public void onClick(View v) {
-            if(mRecyclerViewOnClickListenerHack != null){
-                mRecyclerViewOnClickListenerHack.onClickListener(v, getAdapterPosition());
-            }
+            
+            List<ContextMenuItem> itens = new ArrayList<>();
+            itens.add( new ContextMenuItem( R.drawable.ic_favorite, "Favorito" ) );
+            itens.add( new ContextMenuItem( R.drawable.ic_link, "Link Web" ) );
+            itens.add( new ContextMenuItem( R.drawable.ic_enterprise, "Empresa Vendas" ) );
+            itens.add( new ContextMenuItem( R.drawable.ic_email, "Email" ) );
+            itens.add( new ContextMenuItem( R.drawable.ic_discart, "Descartar" ) );
+
+            ContextMenuAdapter adapter = new ContextMenuAdapter( mContext, itens );
+
+            ListPopupWindow listPopupWindow = new ListPopupWindow(mContext);
+            listPopupWindow.setAdapter( adapter );
+            listPopupWindow.setAnchorView(ivContextMenu);
+            listPopupWindow.setWidth((int) (240 * scale + 0.5f));
+            listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    //Toast.makeText(mContext, getAdapterPosition() + " : " + position, Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(mContext, CarActivity.class);
+                    intent.putExtra("car", mList.get( getAdapterPosition() ));
+                    mContext.startActivity(intent);
+                }
+            });
+            listPopupWindow.setModal(true);
+            listPopupWindow.getBackground().setAlpha(0);
+            listPopupWindow.show();
         }
     }
 }

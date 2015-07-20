@@ -20,4 +20,5 @@
 
     <color name="mdtp_accent_color">#009688</color>
     <color name="mdtp_accent_color_dark">#00796B</color>
+    <color name="colorContextMenu">#616161</color>
 </resources>

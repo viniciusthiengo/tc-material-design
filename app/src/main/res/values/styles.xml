@@ -21,6 +21,8 @@
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_primary_text">@color/colorPrimarytext</item>
         <item name="material_drawer_selected_text">@color/colorPrimary</item>
+
+
     </style>
 
     <style name="Theme.MyThemeBottom" parent="Theme.MyTheme">

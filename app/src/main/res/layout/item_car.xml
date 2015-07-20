@@ -3,16 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="20dp"
-    android:paddingLeft="16dp">
-
-    <!-- ImageView
-        android:layout_alignParentLeft="true"
-        android:id="@+id/iv_car"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="6dp"
-        android:scaleType="centerCrop"
-        android:src="@null" / -->
+    android:paddingLeft="16dp"
+    android:paddingStart="16dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_car"
@@ -20,6 +12,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginRight="6dp"
+        android:layout_marginEnd="6dp"
         fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/loading_img"
         fresco:failureImage="@drawable/error_img"
@@ -28,6 +21,7 @@
     <TextView
         android:textColor="@color/colorPrimarytext"
         android:layout_toRightOf="@+id/iv_car"
+        android:layout_toEndOf="@+id/iv_car"
         android:id="@+id/tv_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,6 +33,7 @@
         android:textColor="@color/colorPrimarytext"
         android:layout_below="@+id/tv_model"
         android:layout_alignLeft="@+id/tv_model"
+        android:layout_alignStart="@+id/tv_model"
         android:id="@+id/tv_brand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,6 +44,7 @@
         android:id="@+id/vw_divider"
         android:layout_marginTop="20dp"
         android:layout_alignLeft="@+id/tv_model"
+        android:layout_alignStart="@+id/tv_model"
         android:layout_below="@+id/tv_brand"
         android:background="@color/colorDivider"
         android:layout_width="match_parent"
