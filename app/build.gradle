@@ -45,4 +45,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.5.+'
 
     compile 'com.wdullaer:materialdatetimepicker:1.4.1'
+
+    compile 'com.mcxiaoke.volley:library:1.0.17'
+    compile 'com.google.code.gson:gson:2.3.1'
 }

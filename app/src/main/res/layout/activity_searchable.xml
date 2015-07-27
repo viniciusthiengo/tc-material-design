@@ -34,4 +34,11 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <ProgressBar
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:id="@+id/pb_load"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
 </android.support.design.widget.CoordinatorLayout>

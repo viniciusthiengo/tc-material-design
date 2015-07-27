@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,21 +18,11 @@ import br.com.thiengo.tcmaterialdesign.MainActivity;
 import br.com.thiengo.tcmaterialdesign.R;
 import br.com.thiengo.tcmaterialdesign.adapters.CarAdapter;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
+import br.com.thiengo.tcmaterialdesign.domain.WrapObjToNetwork;
+import br.com.thiengo.tcmaterialdesign.extras.UtilTCM;
+import br.com.thiengo.tcmaterialdesign.network.NetworkConnection;
 
 public class PopularCarFragment extends CarFragment {
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if(savedInstanceState != null){
-            mList = savedInstanceState.getParcelableArrayList("mList");
-        }
-        else{
-            mList = ((MainActivity) getActivity()).getCarsByCategory(4);
-        }
-    }
 
 
     @Override
@@ -37,6 +30,9 @@ public class PopularCarFragment extends CarFragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_car, container, false);
+
+        mList = new ArrayList<>();
+        mPbLoad = (ProgressBar) view.findViewById(R.id.pb_load);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_list);
         mRecyclerView.setHasFixedSize(true);
@@ -50,21 +46,11 @@ public class PopularCarFragment extends CarFragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (dy > 0) {
-                    //fab.hideMenuButton(true);
-                } else {
-                    //fab.showMenuButton(true);
-                }
-
                 LinearLayoutManager llm = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-                CarAdapter adapter = (CarAdapter) mRecyclerView.getAdapter();
 
-                if (mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1) {
-                    List<Car> listAux = ((MainActivity) getActivity()).getSetCarList(10, 4);
-                    ((MainActivity) getActivity()).getListCars().addAll(listAux);
-                    for (int i = 0; i < listAux.size(); i++) {
-                        adapter.addListItem(listAux.get(i), mList.size());
-                    }
+                if (mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
+                        && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing()) ) {
+                    NetworkConnection.getInstance(getActivity()).execute(PopularCarFragment.this, PopularCarFragment.class.getName());
                 }
             }
         });
@@ -77,9 +63,23 @@ public class PopularCarFragment extends CarFragment {
         adapter.setRecyclerViewOnClickListenerHack(this);
         mRecyclerView.setAdapter(adapter);
 
+        activateSwipRefresh(view, this, PopularCarFragment.class.getName());
+
         setFloatingActionButton(view);
 
         return view;
+    }
+
+
+    public void callVolleyRequest(  ){
+        NetworkConnection.getInstance(getActivity()).execute(this, PopularCarFragment.class.getName() );
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        NetworkConnection.getInstance(getActivity()).getRequestQueue().cancelAll(PopularCarFragment.class.getName());
     }
 
 
@@ -87,4 +87,23 @@ public class PopularCarFragment extends CarFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
+
+    // NETWORK
+        @Override
+        public WrapObjToNetwork doBefore() {
+            mPbLoad.setVisibility(View.VISIBLE);
+
+            if( UtilTCM.verifyConnection(getActivity()) ){
+                Car car = new Car();
+                car.setCategory(4);
+
+                if( mList != null && mList.size() > 0 ){
+                    car.setId( mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing() ? mList.get(0).getId() : mList.get(mList.size() - 1).getId() );
+                }
+
+                return( new WrapObjToNetwork(car, "get-cars", (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) ) );
+            }
+            return null;
+        }
 }

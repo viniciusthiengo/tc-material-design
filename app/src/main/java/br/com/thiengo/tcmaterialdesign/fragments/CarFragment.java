@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -39,6 +40,12 @@ import com.nispok.snackbar.enums.SnackbarType;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListenerAdapter;*/
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,30 +54,22 @@ import br.com.thiengo.tcmaterialdesign.MainActivity;
 import br.com.thiengo.tcmaterialdesign.R;
 import br.com.thiengo.tcmaterialdesign.adapters.CarAdapter;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
+import br.com.thiengo.tcmaterialdesign.domain.WrapObjToNetwork;
 import br.com.thiengo.tcmaterialdesign.extras.UtilTCM;
 import br.com.thiengo.tcmaterialdesign.interfaces.RecyclerViewOnClickListenerHack;
+import br.com.thiengo.tcmaterialdesign.network.NetworkConnection;
+import br.com.thiengo.tcmaterialdesign.network.Transaction;
 import de.greenrobot.event.EventBus;
 
-public class CarFragment extends Fragment implements RecyclerViewOnClickListenerHack {
+public class CarFragment extends Fragment implements RecyclerViewOnClickListenerHack, Transaction {
+
     protected static final String TAG = "LOG";
     protected RecyclerView mRecyclerView;
     protected List<Car> mList;
     protected android.support.design.widget.FloatingActionButton fab;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected Activity mActivity;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if(savedInstanceState != null){
-            mList = savedInstanceState.getParcelableArrayList("mList");
-        }
-        else{
-            mList = ((MainActivity) getActivity()).getCarsByCategory(0);
-        }
-    }
+    protected ProgressBar mPbLoad;
 
 
     @Override
@@ -103,6 +102,9 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_car, container, false);
 
+        mList = new ArrayList<>();
+        mPbLoad = (ProgressBar) view.findViewById(R.id.pb_load);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_list);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -118,17 +120,13 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
                 LinearLayoutManager llm = (LinearLayoutManager) mRecyclerView.getLayoutManager();
                 CarAdapter adapter = (CarAdapter) mRecyclerView.getAdapter();
 
-                if (mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1) {
-                    List<Car> listAux = ((MainActivity) getActivity()).getSetCarList(10, 0);
-                    ((MainActivity) getActivity()).getListCars().addAll( listAux );
-
-                    for (int i = 0; i < listAux.size(); i++) {
-                        adapter.addListItem(listAux.get(i), mList.size());
-                    }
+                if (mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
+                        && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing()) ) {
+                    NetworkConnection.getInstance(getActivity()).execute(CarFragment.this, CarFragment.class.getName());
                 }
             }
         });
-        mRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener( getActivity(), mRecyclerView, this ));
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(getActivity(), mRecyclerView, this));
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -138,55 +136,60 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
         mRecyclerView.setAdapter(adapter);
         setFloatingActionButton(view);
 
-        // SWIPE REFRESH LAYOUT
-            mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl_swipe);
-            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-
-                    if( UtilTCM.verifyConnection( getActivity() ) ){
-                        CarAdapter adapter = (CarAdapter) mRecyclerView.getAdapter();
-
-                        List<Car> listAux = ((MainActivity) getActivity()).getSetCarList(2, 0);
-                        ((MainActivity) getActivity()).getListCars().addAll(listAux);
-
-                        for (int i = 0; i < listAux.size(); i++) {
-                            adapter.addListItem(listAux.get(i), 0);
-                            mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, 0);
-                        }
-
-                        new Thread(new Runnable(){
-                            public void run(){
-                                SystemClock.sleep(2000);
-                                getActivity().runOnUiThread(new Runnable(){
-                                    public void run(){
-                                        mSwipeRefreshLayout.setRefreshing(false);
-                                    }
-                                });
-                            }
-                        }).start();
-                    }
-                    else{
-                        mSwipeRefreshLayout.setRefreshing(false);
-
-                        android.support.design.widget.Snackbar.make(view, "Sem conexão com Internet. Por favor, verifique sey WiFi ou 3G.", android.support.design.widget.Snackbar.LENGTH_LONG)
-                                .setAction("Ok", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent it = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                                        startActivity(it);
-                                    }
-                                })
-                                .setActionTextColor(getActivity().getResources().getColor( R.color.coloLink ))
-                            .show();
-                    }
-
-                }
-            });
+        activateSwipRefresh(view, this, CarFragment.class.getName());
 
         return view;
     }
 
+
+    public void activateSwipRefresh(final View view, final Transaction transaction, final String tag){
+        // SWIPE REFRESH LAYOUT
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl_swipe);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                if (UtilTCM.verifyConnection(getActivity())) {
+                    NetworkConnection.getInstance(getActivity()).execute(transaction, tag);
+                } else {
+                    mSwipeRefreshLayout.setRefreshing(false);
+
+                    android.support.design.widget.Snackbar.make(view, "Sem conexão com Internet. Por favor, verifique sey WiFi ou 3G.", android.support.design.widget.Snackbar.LENGTH_LONG)
+                            .setAction("Ok", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent it = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                                    startActivity(it);
+                                }
+                            })
+                            .setActionTextColor(getActivity().getResources().getColor(R.color.coloLink))
+                            .show();
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState != null){
+            mList = savedInstanceState.getParcelableArrayList("mList");
+
+            if( mList == null || mList.size() == 0 ){
+                callVolleyRequest();
+            }
+        }
+        else{
+            callVolleyRequest();
+        }
+    }
+
+
+    public void callVolleyRequest(){
+        NetworkConnection.getInstance(getActivity()).execute(this, CarFragment.class.getName() );
+    }
 
     public void setFloatingActionButton(final View view){
         fab = (android.support.design.widget.FloatingActionButton) getActivity().findViewById(R.id.fab);
@@ -237,7 +240,6 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
     public void onLongPressClickListener(View view, int position) {
         Toast.makeText(getActivity(), "onLongPressClickListener(): "+position, Toast.LENGTH_SHORT).show();
     }
-
 
     private static class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener {
         private Context mContext;
@@ -311,4 +313,64 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("mList", (ArrayList<Car>) mList);
     }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        NetworkConnection.getInstance(getActivity()).getRequestQueue().cancelAll( CarFragment.class.getName() );
+    }
+
+    // NETWORK
+        @Override
+        public WrapObjToNetwork doBefore() {
+            mPbLoad.setVisibility( View.VISIBLE );
+
+            if( UtilTCM.verifyConnection(getActivity()) ){
+                Car car = new Car();
+                car.setCategory(0);
+
+                if( mList != null && mList.size() > 0 ){
+                    car.setId( mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing() ? mList.get(0).getId() : mList.get(mList.size() - 1).getId() );
+                }
+
+                return( new WrapObjToNetwork(car, "get-cars", (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) ) );
+            }
+            return null;
+        }
+
+        @Override
+        public void doAfter(JSONArray jsonArray) {
+            mPbLoad.setVisibility(View.GONE );
+
+            if( jsonArray != null ){
+                CarAdapter adapter = (CarAdapter) mRecyclerView.getAdapter();
+                Gson gson = new Gson();
+                int auxPosition = 0, position;
+
+                if( mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing() ){
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    auxPosition = 1;
+                }
+
+                try{
+                    for(int i = 0, tamI = jsonArray.length(); i < tamI; i++){
+                        Car car = gson.fromJson( jsonArray.getJSONObject( i ).toString(), Car.class );
+                        position = auxPosition == 0 ? mList.size() : 0;
+                        adapter.addListItem(car, position);
+
+                        if( auxPosition == 1 ){
+                            mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, position);
+                        }
+                    }
+                }
+                catch(JSONException e){
+                    Log.i(TAG, "doAfter(): "+e.getMessage());
+                }
+            }
+            else{
+                Toast.makeText(getActivity(), "Falhou. Tente novamente.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
 }

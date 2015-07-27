@@ -197,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .build();
 
+
                 listProfile = getSetProfileList();
                 if(listProfile != null && listProfile.size() > 0){
                     if(mProfileDrawerSelected != 0){
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                     .withDrawerGravity(Gravity.START)
                     .withSavedInstance(savedInstanceState)
                     .withActionBarDrawerToggle(true)
-                        .withAccountHeader(headerNavigationLeft)
+                    .withAccountHeader(headerNavigationLeft)
                     .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem) {
@@ -261,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                             return false;
                         }
                     })
-                    .build();
+                .build();
 
                 listCatefories = getSetCategoryList();
                 if(listCatefories != null && listCatefories.size() > 0){
@@ -467,7 +468,7 @@ public class MainActivity extends AppCompatActivity {
 
             for(int i = 0; i < qtd; i++){
                 Car c = new Car( models[i % models.length], brands[ i % brands.length], photos[i % models.length], Car.PATH + urlPhotos[i % models.length] );
-                c.setDescription( description );
+                c.setDescription(description);
                 c.setCategory( categories[ i % brands.length ] );
                 c.setTel("33221155");
 
@@ -475,6 +476,21 @@ public class MainActivity extends AppCompatActivity {
                     continue;
                 }
 
+                /*String query = "INSERT INTO tcc_car" +
+                        "(category," +
+                        "model," +
+                        "brand," +
+                        "description," +
+                        "tel," +
+                        "url_photo)" +
+                        "VALUES" +
+                        "("+c.getCategory()+"," +
+                        "\""+c.getModel()+"\"," +
+                        "\""+c.getBrand()+"\"," +
+                        "\""+c.getDescription()+"\"," +
+                        "\""+c.getTel()+"\"," +
+                        "\""+c.getUrlPhoto()+"\");";
+                Log.i("LOG", query);*/
                 listAux.add(c);
             }
             return(listAux);
@@ -520,16 +536,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void launchInviteCall( Intent intent ){
-        Intent it = new Intent(intent).setClass(this, CarActivity.class);
+            Intent it = new Intent(intent).setClass(this, CarActivity.class);
 
-        for( int i = 0, tamI = listCars.size(); i < tamI; i++ ){
-            if( intent.toString().indexOf( listCars.get(i).getBrand() ) > -1
-                && intent.toString().indexOf( listCars.get(i).getModel() ) > -1 ){
-                it.putExtra("car", listCars.get(i));
-                break;
+            for( int i = 0, tamI = listCars.size(); i < tamI; i++ ){
+                if( intent.toString().indexOf( listCars.get(i).getBrand() ) > -1
+                    && intent.toString().indexOf( listCars.get(i).getModel() ) > -1 ){
+                    it.putExtra("car", listCars.get(i));
+                    break;
+                }
             }
-        }
 
-        startActivity(it);
-    }
+            startActivity(it);
+        }
 }

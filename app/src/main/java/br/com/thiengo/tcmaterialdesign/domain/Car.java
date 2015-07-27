@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Car implements Parcelable {
     public static final String PATH = "http://www.villopim.com.br/android/glide/__w-395-593-790-1185__/";
 
+    private long id;
     private String model;
     private String brand;
     private String description;
@@ -27,6 +28,13 @@ public class Car implements Parcelable {
         urlPhoto = up;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getModel() {
         return model;
@@ -86,6 +94,7 @@ public class Car implements Parcelable {
 
     // PARCELABLE
         public Car(Parcel parcel){
+            setId(parcel.readLong());
             setModel(parcel.readString());
             setBrand(parcel.readString());
             setDescription(parcel.readString());
@@ -100,6 +109,7 @@ public class Car implements Parcelable {
         }
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeLong( getId() );
             dest.writeString( getModel() );
             dest.writeString( getBrand() );
             dest.writeString( getDescription() );

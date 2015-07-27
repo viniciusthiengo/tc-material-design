@@ -24,8 +24,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,17 +40,22 @@ import java.util.List;
 
 import br.com.thiengo.tcmaterialdesign.adapters.CarAdapter;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
+import br.com.thiengo.tcmaterialdesign.domain.WrapObjToNetwork;
+import br.com.thiengo.tcmaterialdesign.extras.UtilTCM;
 import br.com.thiengo.tcmaterialdesign.interfaces.RecyclerViewOnClickListenerHack;
+import br.com.thiengo.tcmaterialdesign.network.NetworkConnection;
+import br.com.thiengo.tcmaterialdesign.network.Transaction;
 import br.com.thiengo.tcmaterialdesign.provider.SearchableProvider;
 
 
-public class SearchableActivity extends AppCompatActivity implements RecyclerViewOnClickListenerHack {
+public class SearchableActivity extends AppCompatActivity implements RecyclerViewOnClickListenerHack, Transaction {
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private List<Car> mList;
     private List<Car> mListAux;
     private CarAdapter adapter;
     private CoordinatorLayout clContainer;
+    private ProgressBar mPbLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +78,8 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
 
         clContainer = (CoordinatorLayout) findViewById(R.id.cl_container);
 
+        mPbLoad = (ProgressBar) findViewById(R.id.pb_load);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_list);
         mRecyclerView.setHasFixedSize(true);
 
@@ -84,8 +97,8 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
 
     @Override
     protected void onNewIntent(Intent intent) {
-        setIntent( intent );
-        hendleSearch( intent );
+        setIntent(intent);
+        hendleSearch(intent);
     }
 
     public void hendleSearch( Intent intent ){
@@ -106,34 +119,7 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
     public void filterCars( String q ){
         mListAux.clear();
 
-        for( int i = 0, tamI = mList.size(); i < tamI; i++ ){
-            if( mList.get(i).getModel().toLowerCase().startsWith( q.toLowerCase() ) ){
-                mListAux.add( mList.get(i) );
-            }
-        }
-        for( int i = 0, tamI = mList.size(); i < tamI; i++ ){
-            if( !mListAux.contains( mList.get(i) )
-                && mList.get(i).getBrand().toLowerCase().startsWith( q.toLowerCase() ) ){
-                mListAux.add( mList.get(i) );
-            }
-        }
-
-        mRecyclerView.setVisibility( mListAux.isEmpty() ? View.GONE : View.VISIBLE);
-        if( mListAux.isEmpty() ){
-            TextView tv = new TextView( this );
-            tv.setText( "Nenhum carro encontrado." );
-            tv.setTextColor( getResources().getColor( R.color.colorPrimarytext ) );
-            tv.setId( 1 );
-            tv.setLayoutParams( new FrameLayout.LayoutParams( FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT )  );
-            tv.setGravity(Gravity.CENTER);
-
-            clContainer.addView( tv );
-        }
-        else if( clContainer.findViewById(1) != null ) {
-            clContainer.removeView( clContainer.findViewById(1) );
-        }
-
-        adapter.notifyDataSetChanged();
+        NetworkConnection.getInstance(this).execute(this, SearchableActivity.class.getName());
     }
 
 
@@ -160,7 +146,7 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
         }
 
         searchView.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
-        searchView.setQueryHint( getResources().getString(R.string.search_hint) );
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
 
         return true;
     }
@@ -215,4 +201,62 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
 
     @Override
     public void onLongPressClickListener(View view, int position) {}
+
+
+    // NETWORK
+        @Override
+        public WrapObjToNetwork doBefore() {
+            mPbLoad.setVisibility( View.VISIBLE );
+
+            if( UtilTCM.verifyConnection(this) ){
+                Car car = new Car();
+                car.setCategory(0);
+
+                if( mList != null && mList.size() > 0 ){
+                    car.setId( mList.get(mList.size() - 1).getId() );
+                }
+
+                return( new WrapObjToNetwork(car, "get-cars-search", mToolbar.getTitle().toString() ) );
+            }
+            return null;
+        }
+
+        @Override
+        public void doAfter(JSONArray jsonArray) {
+            mPbLoad.setVisibility(View.GONE );
+
+            if( jsonArray != null ){
+                CarAdapter adapter = (CarAdapter) mRecyclerView.getAdapter();
+                Gson gson = new Gson();
+
+                try{
+                    for(int i = 0, tamI = jsonArray.length(); i < tamI; i++){
+                        Car car = gson.fromJson( jsonArray.getJSONObject( i ).toString(), Car.class );
+                        adapter.addListItem(car, mListAux.size());
+                    }
+                }
+                catch(JSONException e){
+                    Log.i("LOG", "doAfter(): "+e.getMessage());
+                }
+            }
+            else{
+                Toast.makeText(this, "Falhou. Tente novamente.", Toast.LENGTH_SHORT).show();
+            }
+
+
+            mRecyclerView.setVisibility(mListAux.isEmpty() ? View.GONE : View.VISIBLE);
+            if( mListAux.isEmpty() ){
+                TextView tv = new TextView( this );
+                tv.setText( "Nenhum carro encontrado." );
+                tv.setTextColor( getResources().getColor( R.color.colorPrimarytext ) );
+                tv.setId( 1 );
+                tv.setLayoutParams( new FrameLayout.LayoutParams( FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT )  );
+                tv.setGravity(Gravity.CENTER);
+
+                clContainer.addView( tv );
+            }
+            else if( clContainer.findViewById(1) != null ) {
+                clContainer.removeView( clContainer.findViewById(1) );
+            }
+        }
 }

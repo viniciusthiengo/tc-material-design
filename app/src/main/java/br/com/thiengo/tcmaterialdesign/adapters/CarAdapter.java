@@ -206,7 +206,7 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.MyViewHolder> {
 
 
     public void addListItem(Car c, int position){
-        mList.add(c);
+        mList.add(position, c);
         notifyItemInserted(position);
     }
 

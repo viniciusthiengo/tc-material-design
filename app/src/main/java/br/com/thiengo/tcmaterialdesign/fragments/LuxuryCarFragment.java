@@ -12,10 +12,16 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 /*import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;*/
+
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,29 +30,22 @@ import br.com.thiengo.tcmaterialdesign.MainActivity;
 import br.com.thiengo.tcmaterialdesign.R;
 import br.com.thiengo.tcmaterialdesign.adapters.CarAdapter;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
+import br.com.thiengo.tcmaterialdesign.domain.WrapObjToNetwork;
+import br.com.thiengo.tcmaterialdesign.extras.UtilTCM;
 import br.com.thiengo.tcmaterialdesign.interfaces.RecyclerViewOnClickListenerHack;
+import br.com.thiengo.tcmaterialdesign.network.NetworkConnection;
+import br.com.thiengo.tcmaterialdesign.network.Transaction;
 
 public class LuxuryCarFragment extends CarFragment {
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if(savedInstanceState != null){
-            mList = savedInstanceState.getParcelableArrayList("mList");
-        }
-        else{
-            mList = ((MainActivity) getActivity()).getCarsByCategory(1);
-        }
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_car, container, false);
+
+        mList = new ArrayList<>();
+        mPbLoad = (ProgressBar) view.findViewById(R.id.pb_load);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_list);
         mRecyclerView.setHasFixedSize(true);
@@ -60,22 +59,12 @@ public class LuxuryCarFragment extends CarFragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (dy > 0) {
-                    //fab.hideMenuButton(true);
-                } else {
-                    //fab.showMenuButton(true);
-                }
-
                 GridLayoutManager llm = (GridLayoutManager) mRecyclerView.getLayoutManager();
-                CarAdapter adapter = (CarAdapter) mRecyclerView.getAdapter();
 
-                if (mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1) {
-                    List<Car> listAux = ((MainActivity) getActivity()).getSetCarList(10, 1);
-                    ((MainActivity) getActivity()).getListCars().addAll(listAux);
+                if (mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
+                        && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing())) {
 
-                    for (int i = 0; i < listAux.size(); i++) {
-                        adapter.addListItem(listAux.get(i), mList.size());
-                    }
+                    NetworkConnection.getInstance(getActivity()).execute(LuxuryCarFragment.this, LuxuryCarFragment.class.getName());
                 }
             }
         });
@@ -87,13 +76,48 @@ public class LuxuryCarFragment extends CarFragment {
         adapter.setRecyclerViewOnClickListenerHack(this);
         mRecyclerView.setAdapter(adapter);
 
+        activateSwipRefresh(view, this, LuxuryCarFragment.class.getName());
+
         setFloatingActionButton(view);
 
         return view;
     }
 
+
+    public void callVolleyRequest(  ){
+        NetworkConnection.getInstance(getActivity()).execute(this, LuxuryCarFragment.class.getName() );
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        NetworkConnection.getInstance(getActivity()).getRequestQueue().cancelAll(LuxuryCarFragment.class.getName());
+    }
+
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
+
+    // NETWORK
+        @Override
+        public WrapObjToNetwork doBefore() {
+            mPbLoad.setVisibility(View.VISIBLE);
+
+            if( UtilTCM.verifyConnection(getActivity()) ){
+                Car car = new Car();
+                car.setCategory(1);
+
+                if( mList != null && mList.size() > 0 ){
+                    car.setId( mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing() ? mList.get(0).getId() : mList.get(mList.size() - 1).getId() );
+                }
+
+                return( new WrapObjToNetwork(car, "get-cars", (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) ) );
+            }
+            return null;
+        }
+
 }
