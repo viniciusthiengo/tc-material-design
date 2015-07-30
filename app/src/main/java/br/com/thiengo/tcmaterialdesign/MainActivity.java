@@ -272,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
                         //navigationDrawerLeft.get
                     }
                     navigationDrawerLeft.setSelection(mItemDrawerSelected);
+
                 }
 
 
