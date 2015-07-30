@@ -192,14 +192,6 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.MyViewHolder> {
             }
             catch(Exception e){}
         }
-
-        Bitmap bitmap  = myViewHolder.ivCar.getDrawingCache();
-        if( bitmap != null ){
-            Log.i("LOG", "OK");
-        }
-        else{
-            Log.i("LOG", "NULL");
-        }
     }
 
     @Override
