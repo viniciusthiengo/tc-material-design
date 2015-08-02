@@ -16,7 +16,7 @@ A principio a APP foi criada apenas para cobrir a série Material Design no Andr
 
 ## Instalação / Importação ##
 
-Para rodar o projeto basta obter o `código` por clone ou realizando o download do `.zip`. Então no Android Studio (depois de descompactado o projeto, caso tenha importado via .zip), logo na página inicial, clique em "import" e navegue até o diretório do projeto selecionando-o. Dessa forma o projeto deve ser carregado sem problemas no AndroidStudio. É importante que você tenha o AndroidStudio atualizado, pois a APP é desenvolvida sempre com a última versão do IDE e do SDK.
+Para rodar o projeto basta obter o `código` por clone ou realizando o download do `.zip`. Então no Android Studio (depois de descompactado o projeto, caso tenha importado via .zip), logo na página inicial, clique em "Import project (Eclipse ADT, Gradle, etc.)" e navegue até o diretório do projeto selecionando-o. Dessa forma o projeto deve ser carregado sem problemas no AndroidStudio. É importante que você tenha o AndroidStudio atualizado, pois a APP é desenvolvida sempre com a última versão do IDE e do SDK.
 
 ### Server-Side ###
 
