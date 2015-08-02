@@ -6,8 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.transition.ChangeBounds;
-import android.transition.ChangeTransform;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionInflater;

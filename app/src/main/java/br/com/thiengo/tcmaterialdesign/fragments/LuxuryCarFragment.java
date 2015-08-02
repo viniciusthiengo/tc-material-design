@@ -1,40 +1,24 @@
 package br.com.thiengo.tcmaterialdesign.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
-/*import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;*/
-
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import br.com.thiengo.tcmaterialdesign.MainActivity;
 import br.com.thiengo.tcmaterialdesign.R;
 import br.com.thiengo.tcmaterialdesign.adapters.CarAdapter;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
 import br.com.thiengo.tcmaterialdesign.domain.WrapObjToNetwork;
 import br.com.thiengo.tcmaterialdesign.extras.UtilTCM;
-import br.com.thiengo.tcmaterialdesign.interfaces.RecyclerViewOnClickListenerHack;
 import br.com.thiengo.tcmaterialdesign.network.NetworkConnection;
-import br.com.thiengo.tcmaterialdesign.network.Transaction;
+
+/*import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;*/
 
 public class LuxuryCarFragment extends CarFragment {
 

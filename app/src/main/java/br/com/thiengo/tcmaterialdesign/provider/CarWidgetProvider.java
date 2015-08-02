@@ -1,24 +1,14 @@
 package br.com.thiengo.tcmaterialdesign.provider;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
-
-import javax.crypto.Mac;
 
 import br.com.thiengo.tcmaterialdesign.MainActivity;
 import br.com.thiengo.tcmaterialdesign.R;
-import br.com.thiengo.tcmaterialdesign.domain.Car;
 import br.com.thiengo.tcmaterialdesign.service.CarWidgetService;
 
 /**

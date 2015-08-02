@@ -4,13 +4,9 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.ChangeBounds;
-import android.transition.ChangeTransform;
 import android.transition.Explode;
-import android.transition.Fade;
 import android.transition.Slide;
-import android.transition.TransitionInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 
 public class TransitionActivity_B extends Activity{

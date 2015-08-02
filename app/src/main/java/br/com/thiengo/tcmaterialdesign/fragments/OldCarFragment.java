@@ -1,33 +1,24 @@
 package br.com.thiengo.tcmaterialdesign.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
-/*import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;*/
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import br.com.thiengo.tcmaterialdesign.MainActivity;
 import br.com.thiengo.tcmaterialdesign.R;
 import br.com.thiengo.tcmaterialdesign.adapters.CarAdapter;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
 import br.com.thiengo.tcmaterialdesign.domain.WrapObjToNetwork;
 import br.com.thiengo.tcmaterialdesign.extras.UtilTCM;
-import br.com.thiengo.tcmaterialdesign.interfaces.RecyclerViewOnClickListenerHack;
 import br.com.thiengo.tcmaterialdesign.network.NetworkConnection;
+
+/*import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;*/
 
 public class OldCarFragment extends CarFragment{
 

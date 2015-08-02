@@ -1,8 +1,5 @@
 package br.com.thiengo.tcmaterialdesign.domain;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 
 /**

@@ -3,8 +3,6 @@ package br.com.thiengo.tcmaterialdesign.domain;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-
 /**
  * Created by viniciusthiengo on 4/5/15.
  */
