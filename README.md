@@ -1,6 +1,8 @@
 TCMaterialDesign APP
 ===========================================
 
+[English version](https://github.com/viniciusthiengo/tc-material-design/blob/master/README-EN.md)
+
 ## Projeto ##
 
 TCMaterialDesign é um APP desenvolvido nos exemplos em vídeo do [canal do YouTube Thiengo Calopsita](https://www.youtube.com/user/thiengoCalopsita) com intuito de apresentar a Android developers algumas features / libs que podem ser utilizadas no dev Android.
