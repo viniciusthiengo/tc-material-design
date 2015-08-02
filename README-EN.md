@@ -1,7 +1,7 @@
 TCMaterialDesign APP
 ===========================================
 
-[Português version](https://github.com/viniciusthiengo/tc-material-design/blob/master/README.md)
+[Versão em português](https://github.com/viniciusthiengo/tc-material-design/blob/master/README.md)
 
 ## Project ##
 
