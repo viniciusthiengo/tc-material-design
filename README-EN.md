@@ -5,7 +5,7 @@ TCMaterialDesign APP
 
 ## Project ##
 
-TCMaterialDesign is an APP developed on Thiengo's Calopsita YouTube Channel in a way to teache others how to develope an Android APP.
+TCMaterialDesign is an APP developed on TCMaterialDesign is an APP developed on [Thiengo's Calopsita YouTube Channel](https://www.youtube.com/user/thiengoCalopsita) in a way to teache others how to develope an Android APP. in a way to teache others how to develope an Android APP.
 
 ![PrintScreen APP exemplo](https://s3-sa-east-1.amazonaws.com/thiengo-calopsita/github/device-2015-06-07-122119.png)
 ![PrintScreen APP exemplo](https://s3-sa-east-1.amazonaws.com/thiengo-calopsita/github/device-2015-07-19-211451.png)
