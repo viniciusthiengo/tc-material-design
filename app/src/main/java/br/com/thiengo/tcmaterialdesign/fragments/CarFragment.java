@@ -43,13 +43,6 @@ import br.com.thiengo.tcmaterialdesign.network.NetworkConnection;
 import br.com.thiengo.tcmaterialdesign.network.Transaction;
 import de.greenrobot.event.EventBus;
 
-/*import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.enums.SnackbarType;
-import com.nispok.snackbar.listeners.ActionClickListener;
-import com.nispok.snackbar.listeners.EventListenerAdapter;*/
 
 public class CarFragment extends Fragment implements RecyclerViewOnClickListenerHack, Transaction {
 
