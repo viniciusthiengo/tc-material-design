@@ -5,7 +5,7 @@ TCMaterialDesign APP
 
 ## Project ##
 
-TCMaterialDesign is an APP developed on Thiengo's Calopsita YouTube Channel in a way to teache others how to develope an Android APP.
+TCMaterialDesign is an APP developed on TCMaterialDesign is an APP developed on [Thiengo's Calopsita YouTube Channel](https://www.youtube.com/user/thiengoCalopsita) in a way to teache others how to develope an Android APP. in a way to teache others how to develope an Android APP.
 
 ![PrintScreen APP exemplo](https://s3-sa-east-1.amazonaws.com/thiengo-calopsita/github/device-2015-06-07-122119.png)
 ![PrintScreen APP exemplo](https://s3-sa-east-1.amazonaws.com/thiengo-calopsita/github/device-2015-07-19-211451.png)
@@ -16,7 +16,7 @@ In the begin this APP was developed just to be part of a serie named Material De
 
 ## Install / Import ##
 
-Fork or download the project, then using AndroidStudio just click in "import" and browse to this project and open it, done.
+Fork or download the project, then using AndroidStudio just click in "Import project (Eclipse ADT, Gradle, etc.)" and browse to this project and open it, done. [tc-material-design-web](https://github.com/viniciusthiengo/tc-material-design-web)
 
 ### Server-Side ###
 
