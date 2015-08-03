@@ -5,6 +5,7 @@ package br.com.thiengo.tcmaterialdesign.domain;
  */
 public class WrapObjToNetwork {
     private Car car;
+    private Contact contact;
     private String method;
     private boolean isNewer;
     private String term;
@@ -19,6 +20,11 @@ public class WrapObjToNetwork {
         this.car = car;
         this.method = method;
         this.term = term;
+    }
+    public WrapObjToNetwork(Car car, String method, Contact contact) {
+        this.car = car;
+        this.method = method;
+        this.contact = contact;
     }
 
 
@@ -52,5 +58,13 @@ public class WrapObjToNetwork {
 
     public void setTerm(String term) {
         this.term = term;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 }

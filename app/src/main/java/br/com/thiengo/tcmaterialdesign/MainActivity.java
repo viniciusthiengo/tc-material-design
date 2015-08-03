@@ -87,10 +87,10 @@ public class MainActivity extends AppCompatActivity {
         if(savedInstanceState != null){
             mItemDrawerSelected = savedInstanceState.getInt("mItemDrawerSelected", 0);
             mProfileDrawerSelected = savedInstanceState.getInt("mProfileDrawerSelected", 0);
-            listCars = savedInstanceState.getParcelableArrayList("listCars");
+            //listCars = savedInstanceState.getParcelableArrayList("listCars");
         }
         else{
-            listCars = getSetCarList(50);
+            //listCars = getSetCarList(50);
 
             if( AppInviteReferral.hasReferral( getIntent() ) ){
                 launchInviteCall( getIntent() );
@@ -235,8 +235,6 @@ public class MainActivity extends AppCompatActivity {
                 if(listCatefories != null && listCatefories.size() > 0){
                     for( int i = 0; i < listCatefories.size(); i++ ){
                         navigationDrawerLeft.addItem( listCatefories.get(i) );
-
-                        //navigationDrawerLeft.get
                     }
                     navigationDrawerLeft.setSelection(mItemDrawerSelected);
 
@@ -372,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
 
                 list.add( aux );
             }
+
             return(list);
         }
 
@@ -443,41 +442,9 @@ public class MainActivity extends AppCompatActivity {
                 if(category != 0 && c.getCategory() != category){
                     continue;
                 }
-
-                /*String query = "INSERT INTO tcc_car" +
-                        "(category," +
-                        "model," +
-                        "brand," +
-                        "description," +
-                        "tel," +
-                        "url_photo)" +
-                        "VALUES" +
-                        "("+c.getCategory()+"," +
-                        "\""+c.getModel()+"\"," +
-                        "\""+c.getBrand()+"\"," +
-                        "\""+c.getDescription()+"\"," +
-                        "\""+c.getTel()+"\"," +
-                        "\""+c.getUrlPhoto()+"\");";
-                Log.i("LOG", query);*/
                 listAux.add(c);
             }
             return(listAux);
-        }
-
-        public List<Car> getCarsByCategory(int category){
-            List<Car> listAux = new ArrayList<>();
-            for(int i = 0; i < listCars.size() ; i++){
-                if(category != 0 && listCars.get(i).getCategory() != category){
-                    continue;
-                }
-
-                listAux.add(listCars.get(i));
-            }
-            return(listAux);
-        }
-
-        public List<Car> getListCars(){
-            return(listCars);
         }
 
 

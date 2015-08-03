@@ -47,7 +47,6 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private List<Car> mList;
-    private List<Car> mListAux;
     private CarAdapter adapter;
     private CoordinatorLayout clContainer;
     private ProgressBar mPbLoad;
@@ -63,12 +62,10 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(savedInstanceState != null){
-            mList = savedInstanceState.getParcelableArrayList("mList");
-            mListAux = savedInstanceState.getParcelableArrayList("mListAux");
+            mList = savedInstanceState.getParcelableArrayList("mListAux");
         }
         else{
-            mList = (new MainActivity()).getSetCarList(10, 0);
-            mListAux = new ArrayList<>();
+            mList = new ArrayList<>();
         }
 
         clContainer = (CoordinatorLayout) findViewById(R.id.cl_container);
@@ -82,7 +79,7 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
 
-        adapter = new CarAdapter(this, mListAux);
+        adapter = new CarAdapter(this, mList);
         adapter.setRecyclerViewOnClickListenerHack(this);
         mRecyclerView.setAdapter(adapter);
 
@@ -112,18 +109,24 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
 
 
     public void filterCars( String q ){
-        mListAux.clear();
-
+        mList.clear();
         NetworkConnection.getInstance(this).execute(this, SearchableActivity.class.getName());
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("mList", (ArrayList<Car>) mList);
-        outState.putParcelableArrayList("mListAux", (ArrayList<Car>) mListAux);
+        outState.putParcelableArrayList("mListAux", (ArrayList<Car>) mList);
         super.onSaveInstanceState(outState);
     }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        NetworkConnection.getInstance(this).getRequestQueue().cancelAll(SearchableActivity.class.getName());
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -168,12 +171,11 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
     }
 
 
-
     // LISTENERS
     @Override
     public void onClickListener(View view, int position) {
         Intent intent = new Intent(this, CarActivity.class);
-        intent.putExtra("car", mListAux.get(position));
+        intent.putExtra("car", mList.get(position));
 
         // TRANSITIONS
         if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
@@ -227,7 +229,7 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
                 try{
                     for(int i = 0, tamI = jsonArray.length(); i < tamI; i++){
                         Car car = gson.fromJson( jsonArray.getJSONObject( i ).toString(), Car.class );
-                        adapter.addListItem(car, mListAux.size());
+                        adapter.addListItem(car, mList.size());
                     }
                 }
                 catch(JSONException e){
@@ -239,8 +241,8 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
             }
 
 
-            mRecyclerView.setVisibility(mListAux.isEmpty() ? View.GONE : View.VISIBLE);
-            if( mListAux.isEmpty() ){
+            mRecyclerView.setVisibility(mList.isEmpty() ? View.GONE : View.VISIBLE);
+            if( mList.isEmpty() ){
                 TextView tv = new TextView( this );
                 tv.setText( "Nenhum carro encontrado." );
                 tv.setTextColor( getResources().getColor( R.color.colorPrimarytext ) );

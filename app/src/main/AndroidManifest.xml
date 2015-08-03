@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
     <application
         android:name="br.com.thiengo.tcmaterialdesign.application.CustomApplication"
@@ -48,6 +49,11 @@
         <activity
             android:name=".TransitionActivity_B"
             android:label="@string/title_activity_transition"></activity>
+
+        <activity
+            android:name=".ContactActivity"
+            android:theme="@style/Theme.ContactActivity"
+            android:label="@string/title_activity_contact"></activity>
 
         <activity
             android:windowSoftInputMode="adjustPan|adjustNothing"

@@ -45,7 +45,8 @@ public class LuxuryCarFragment extends CarFragment {
 
                 GridLayoutManager llm = (GridLayoutManager) mRecyclerView.getLayoutManager();
 
-                if (mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
+                if ( !isLastItem
+                        && mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
                         && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing())) {
 
                     NetworkConnection.getInstance(getActivity()).execute(LuxuryCarFragment.this, LuxuryCarFragment.class.getName());
@@ -89,7 +90,7 @@ public class LuxuryCarFragment extends CarFragment {
     // NETWORK
         @Override
         public WrapObjToNetwork doBefore() {
-            mPbLoad.setVisibility(View.VISIBLE);
+            mPbLoad.setVisibility( (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) ? View.GONE : View.VISIBLE);
 
             if( UtilTCM.verifyConnection(getActivity()) ){
                 Car car = new Car();

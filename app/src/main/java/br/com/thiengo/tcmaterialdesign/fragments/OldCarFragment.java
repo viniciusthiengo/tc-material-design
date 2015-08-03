@@ -50,7 +50,8 @@ public class OldCarFragment extends CarFragment{
                     max = aux[i] > max ? aux[i] : max;
                 }
 
-                if (mList.size() == max + 1
+                if (!isLastItem
+                        && mList.size() == max + 1
                         && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing()) ) {
                     NetworkConnection.getInstance(getActivity()).execute(OldCarFragment.this, OldCarFragment.class.getName());
                 }
@@ -93,7 +94,7 @@ public class OldCarFragment extends CarFragment{
     // NETWORK
         @Override
         public WrapObjToNetwork doBefore() {
-            mPbLoad.setVisibility(View.VISIBLE);
+            mPbLoad.setVisibility( (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) ? View.GONE : View.VISIBLE);
 
             if( UtilTCM.verifyConnection(getActivity()) ){
                 Car car = new Car();

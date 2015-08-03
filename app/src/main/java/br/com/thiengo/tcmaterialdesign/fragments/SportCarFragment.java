@@ -46,7 +46,8 @@ public class SportCarFragment extends CarFragment {
 
                 LinearLayoutManager llm = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
-                if (mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
+                if ( !isLastItem
+                        && mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
                         && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing())) {
                     NetworkConnection.getInstance(getActivity()).execute(SportCarFragment.this, SportCarFragment.class.getName());
                 }
@@ -90,7 +91,7 @@ public class SportCarFragment extends CarFragment {
     // NETWORK
     @Override
     public WrapObjToNetwork doBefore() {
-        mPbLoad.setVisibility(View.VISIBLE);
+        mPbLoad.setVisibility( (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) ? View.GONE : View.VISIBLE);
 
         if( UtilTCM.verifyConnection(getActivity()) ){
             Car car = new Car();

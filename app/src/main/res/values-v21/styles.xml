@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.MyTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
+    <style name="Theme.MyTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/colorPrimary</item>
 

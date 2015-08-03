@@ -53,6 +53,7 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected Activity mActivity;
     protected ProgressBar mPbLoad;
+    protected boolean isLastItem;
 
 
     @Override
@@ -103,7 +104,8 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
                 LinearLayoutManager llm = (LinearLayoutManager) mRecyclerView.getLayoutManager();
                 CarAdapter adapter = (CarAdapter) mRecyclerView.getAdapter();
 
-                if (mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
+                if ( !isLastItem
+                        && mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
                         && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing()) ) {
                     NetworkConnection.getInstance(getActivity()).execute(CarFragment.this, CarFragment.class.getName());
                 }
@@ -307,7 +309,7 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
     // NETWORK
         @Override
         public WrapObjToNetwork doBefore() {
-            mPbLoad.setVisibility( View.VISIBLE );
+            mPbLoad.setVisibility( (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) ? View.GONE : View.VISIBLE );
 
             if( UtilTCM.verifyConnection(getActivity()) ){
                 Car car = new Car();
@@ -346,6 +348,11 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
                             mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, position);
                         }
                     }
+
+                    if( jsonArray.length() == 0 && auxPosition == 0 ){
+                        isLastItem = true;
+                    }
+
                 }
                 catch(JSONException e){
                     Log.i(TAG, "doAfter(): "+e.getMessage());

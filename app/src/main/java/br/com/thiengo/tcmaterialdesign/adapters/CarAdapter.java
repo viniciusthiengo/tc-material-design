@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import br.com.thiengo.tcmaterialdesign.CarActivity;
+import br.com.thiengo.tcmaterialdesign.ContactActivity;
 import br.com.thiengo.tcmaterialdesign.R;
 import br.com.thiengo.tcmaterialdesign.domain.Car;
 import br.com.thiengo.tcmaterialdesign.domain.ContextMenuItem;
@@ -234,9 +234,15 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.MyViewHolder> {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //Toast.makeText(mContext, getAdapterPosition() + " : " + position, Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(mContext, CarActivity.class);
+                    /*Intent intent = new Intent(mContext, CarActivity.class);
                     intent.putExtra("car", mList.get( getAdapterPosition() ));
-                    mContext.startActivity(intent);
+                    mContext.startActivity(intent);*/
+
+                    if (position == 3) {
+                        Intent intent = new Intent(mContext, ContactActivity.class);
+                        intent.putExtra("car", mList.get( getAdapterPosition() ));
+                        mContext.startActivity(intent);
+                    }
                 }
             });
             listPopupWindow.setModal(true);

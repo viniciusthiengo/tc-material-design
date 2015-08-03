@@ -27,4 +27,9 @@
     <string name="delete_historic">Deletar Histórico</string>
     <string name="action_delete">Rremover cookie</string>
     <string name="title_activity_car_widget">CarWidgetConfigurationActivity</string>
+    <string name="et_subject_hint">Assunto</string>
+    <string name="tv_contact_title">Contato Empresa</string>
+    <string name="title_activity_contact">Contato</string>
+    <string name="et_message_hint">Mensagem de contato</string>
+    <string name="action_send_contact">Enviar</string>
 </resources>
