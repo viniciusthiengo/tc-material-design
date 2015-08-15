@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
@@ -34,7 +32,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.appinvite.AppInviteInvitation;
-import com.mikepenz.materialdrawer.Drawer;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -53,7 +50,6 @@ public class CarActivity extends AppCompatActivity implements DatePickerDialog.O
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Car car;
-    private Drawer.Result navigationDrawerLeft;
     private MaterialDialog mMaterialDialog;
     private TextView tvDescription;
     private ViewGroup mRoot;
@@ -134,10 +130,7 @@ public class CarActivity extends AppCompatActivity implements DatePickerDialog.O
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle(car.getModel());
         setSupportActionBar(mToolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(false);
 
         tvTestDrive = (TextView) findViewById(R.id.tv_test_drive);
         btTestDrive = (Button) findViewById(R.id.bt_test_drive);
@@ -209,22 +202,6 @@ public class CarActivity extends AppCompatActivity implements DatePickerDialog.O
         tvBrand.setText(car.getBrand());
         tvDescription.setText(car.getDescription());
         tvDescription.setVisibility(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || savedInstanceState != null || !isUsingTransition ? View.VISIBLE : View.INVISIBLE);
-
-        navigationDrawerLeft = new Drawer()
-            .withActivity(this)
-            .withToolbar(mToolbar)
-            .withActionBarDrawerToggle(false)
-            .withCloseOnClick(true)
-            .withActionBarDrawerToggleAnimated(false)
-                .withActionBarDrawerToggle(new ActionBarDrawerToggle(this, new DrawerLayout(this), R.string.drawer_open, R.string.drawer_close){
-                    @Override
-                    public void onDrawerSlide(View drawerView, float slideOffset) {
-                        super.onDrawerSlide(drawerView, slideOffset);
-                        navigationDrawerLeft.closeDrawer();
-                        finish();
-                    }
-                })
-            .build();
 
         // FAB
         // keytool -list -v -keystore /Users/viniciusthiengo/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android

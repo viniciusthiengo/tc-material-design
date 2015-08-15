@@ -45,7 +45,7 @@ public class LuxuryCarFragment extends CarFragment {
 
                 GridLayoutManager llm = (GridLayoutManager) mRecyclerView.getLayoutManager();
 
-                if ( !isLastItem
+                if (!isLastItem
                         && mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
                         && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing())) {
 
@@ -53,6 +53,7 @@ public class LuxuryCarFragment extends CarFragment {
                 }
             }
         });
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(getActivity(), mRecyclerView, this));
 
         GridLayoutManager llm = new GridLayoutManager(getActivity(), 3, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(llm);

@@ -53,7 +53,7 @@ public class NetworkConnection {
     }
 
 
-    public void execute( final Transaction transaction, String tag ){
+    public void execute( final Transaction transaction, final String tag ){
         WrapObjToNetwork obj = transaction.doBefore();
         Gson gson = new Gson();
 
@@ -70,6 +70,7 @@ public class NetworkConnection {
             new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
+                    //Log.i("LOG", tag+" ---> "+response);
                     transaction.doAfter(response);
                 }
             },

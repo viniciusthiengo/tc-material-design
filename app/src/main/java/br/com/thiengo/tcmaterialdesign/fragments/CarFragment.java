@@ -161,12 +161,15 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
 
         if(savedInstanceState != null){
             mList = savedInstanceState.getParcelableArrayList("mList");
-
-            if( mList == null || mList.size() == 0 ){
-                callVolleyRequest();
-            }
         }
-        else{
+    }
+
+
+    @Override
+    public void onResume() { // HACKCODE TO WORK WHEN JUST COME BACK
+        super.onResume();
+
+        if(mList == null || mList.size() == 0){
             callVolleyRequest();
         }
     }
@@ -197,7 +200,6 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
 
     @Override
     public void onClickListener(View view, int position) {
-
         Intent intent = new Intent(getActivity(), CarActivity.class);
         intent.putExtra("car", mList.get(position));
 
@@ -226,7 +228,7 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
         Toast.makeText(getActivity(), "onLongPressClickListener(): "+position, Toast.LENGTH_SHORT).show();
     }
 
-    private static class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener {
+    public static class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener {
         private Context mContext;
         private GestureDetector mGestureDetector;
         private RecyclerViewOnClickListenerHack mRecyclerViewOnClickListenerHack;
@@ -250,6 +252,7 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
 
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
+
                     View cv = rv.findChildViewUnder(e.getX(), e.getY());
 
                     boolean callContextMenuStatus = false;
@@ -306,6 +309,8 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
         NetworkConnection.getInstance(getActivity()).getRequestQueue().cancelAll( CarFragment.class.getName() );
     }
 
+
+
     // NETWORK
         @Override
         public WrapObjToNetwork doBefore() {
@@ -316,7 +321,7 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
                 car.setCategory(0);
 
                 if( mList != null && mList.size() > 0 ){
-                    car.setId( mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing() ? mList.get(0).getId() : mList.get(mList.size() - 1).getId() );
+                    car.setId(mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing() ? mList.get(0).getId() : mList.get(mList.size() - 1).getId());
                 }
 
                 return( new WrapObjToNetwork(car, "get-cars", (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) ) );

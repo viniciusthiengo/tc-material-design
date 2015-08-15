@@ -52,11 +52,12 @@ public class OldCarFragment extends CarFragment{
 
                 if (!isLastItem
                         && mList.size() == max + 1
-                        && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing()) ) {
+                        && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing())) {
                     NetworkConnection.getInstance(getActivity()).execute(OldCarFragment.this, OldCarFragment.class.getName());
                 }
             }
         });
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(getActivity(), mRecyclerView, this));
 
         StaggeredGridLayoutManager llm = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         llm.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);

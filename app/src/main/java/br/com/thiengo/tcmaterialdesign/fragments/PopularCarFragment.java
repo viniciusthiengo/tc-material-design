@@ -43,13 +43,14 @@ public class PopularCarFragment extends CarFragment {
 
                 LinearLayoutManager llm = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
-                if ( !isLastItem
+                if (!isLastItem
                         && mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
-                        && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing()) ) {
+                        && (mSwipeRefreshLayout == null || !mSwipeRefreshLayout.isRefreshing())) {
                     NetworkConnection.getInstance(getActivity()).execute(PopularCarFragment.this, PopularCarFragment.class.getName());
                 }
             }
         });
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(getActivity(), mRecyclerView, this));
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
