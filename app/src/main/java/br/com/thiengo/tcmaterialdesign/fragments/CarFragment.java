@@ -102,7 +102,6 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
                 super.onScrolled(recyclerView, dx, dy);
 
                 LinearLayoutManager llm = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-                CarAdapter adapter = (CarAdapter) mRecyclerView.getAdapter();
 
                 if ( !isLastItem
                         && mList.size() == llm.findLastCompletelyVisibleItemPosition() + 1
@@ -119,13 +118,13 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
 
         CarAdapter adapter = new CarAdapter(getActivity(), mList);
         mRecyclerView.setAdapter(adapter);
+
         setFloatingActionButton(view);
 
         activateSwipRefresh(view, this, CarFragment.class.getName());
 
         return view;
     }
-
 
     public void activateSwipRefresh(final View view, final Transaction transaction, final String tag){
         // SWIPE REFRESH LAYOUT
@@ -161,6 +160,10 @@ public class CarFragment extends Fragment implements RecyclerViewOnClickListener
 
         if(savedInstanceState != null){
             mList = savedInstanceState.getParcelableArrayList("mList");
+
+            // HACKCODE TO KEEP THE CORRECT LIST LINKED IN RECYCLERVIEW ADAPTER
+                CarAdapter adapter = new CarAdapter(getActivity(), mList);
+                mRecyclerView.setAdapter(adapter);
         }
     }
 

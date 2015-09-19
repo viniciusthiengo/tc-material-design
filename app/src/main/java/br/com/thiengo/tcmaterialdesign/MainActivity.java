@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_INVITE = 78;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TRANSITIONS
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 launchInviteCall( getIntent() );
             }
         }
+
 
         // TOOLBAR
             mToolbar = (Toolbar) findViewById(R.id.tb_main);
