@@ -200,7 +200,8 @@ public class CarActivity extends AppCompatActivity implements DatePickerDialog.O
         //ivCar.setImageResource(car.getPhoto());
         tvModel.setText(car.getModel());
         tvBrand.setText(car.getBrand());
-        tvDescription.setText(car.getDescription());
+        //tvDescription.setText(car.getDescription());
+        tvDescription.setText("dfjkshdfjg sdjgksjdfgk lsdjbk ");
         tvDescription.setVisibility(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || savedInstanceState != null || !isUsingTransition ? View.VISIBLE : View.INVISIBLE);
 
         // FAB

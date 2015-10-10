@@ -155,6 +155,9 @@ public class MainActivity extends AppCompatActivity {
                     .withCompactStyle(false)
                     .withSavedInstance(savedInstanceState)
                     .withThreeSmallProfileImages(true)
+                        //.withAlternativeProfileHeaderSwitching(false)
+                        //.withSelectionFistLineShown(false)
+                        .withSelectionListEnabledForSingleProfile(false)
                     .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                         @Override
                         public boolean onProfileChanged(View view, IProfile iProfile, boolean b) {
@@ -174,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
                         listProfile.set(mProfileDrawerSelected, listProfile.get(0));
                         listProfile.set(0, aux);
                     }
-                    for(int i = 0; i < listProfile.size(); i++){
+                    //for(int i = 0; i < listProfile.size(); i++){
+                    for(int i = 0; i < 1; i++){
                         headerNavigationLeft.addProfile(listProfile.get(i).getProfile(), i);
                     }
                     headerNavigationLeft.setBackgroundRes(listProfile.get(0).getBackground());
@@ -286,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         searchView.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
-        searchView.setQueryHint( getResources().getString(R.string.search_hint) );
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
 
         return true;
     }

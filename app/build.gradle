@@ -3,7 +3,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "23.0.0"
 
     defaultConfig {
         applicationId "br.com.thiengo.tcmaterialdesign"
@@ -44,12 +44,13 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.6.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.google.android.gms:play-services:7.8.0'
+    //compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.wdullaer:materialdatetimepicker:1.4.1'
     compile 'com.mcxiaoke.volley:library:1.0.17'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.google.android.gms:play-services-ads:7.8.0'
-    compile 'com.google.android.gms:play-services-identity:7.8.0'
-    compile 'com.google.android.gms:play-services-gcm:7.8.0'
+    compile 'com.google.android.gms:play-services-appinvite:8.1.0'
+    compile 'com.google.android.gms:play-services-ads:8.1.0'
+    compile 'com.google.android.gms:play-services-identity:8.1.0'
+    compile 'com.google.android.gms:play-services-gcm:8.1.0'
     compile 'com.facebook.fresco:fresco:0.7.0+'
 }
