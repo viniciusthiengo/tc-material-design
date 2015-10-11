@@ -196,10 +196,10 @@ public class MainActivity extends AppCompatActivity {
                     .withSavedInstance(savedInstanceState)
                     .withActionBarDrawerToggle(true)
                     .withAccountHeader(headerNavigationLeft)
-                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem) {
-                            mViewPager.setCurrentItem( i );
+                        .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem) {
+                                mViewPager.setCurrentItem(i);
 
 
                             /*Fragment frag = null;
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                             ft.commit();
 
                             mToolbar.setTitle( ((PrimaryDrawerItem) iDrawerItem).getName() );*/
-                        }
+                            }
                     })
                     .withOnDrawerItemLongClickListener(new Drawer.OnDrawerItemLongClickListener() {
                         @Override
