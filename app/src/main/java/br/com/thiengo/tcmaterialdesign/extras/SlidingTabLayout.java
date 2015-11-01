@@ -234,6 +234,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         View selectedChild = mTabStrip.getChildAt(tabIndex);
         if (selectedChild != null) {
+            //LinearLayout ll = (LinearLayout) selectedChild;
+            //Log.i("LOG", "TYPE: "+((TextView) ll.getChildAt(0)).getText());
+            //((TextView) ll.getChildAt(0)).setText("1212121");
             int targetScrollX = selectedChild.getLeft() + positionOffset;
 
             if (tabIndex > 0 || positionOffset > 0) {

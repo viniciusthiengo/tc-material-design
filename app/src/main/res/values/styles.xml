@@ -30,6 +30,7 @@
         <item name="android:windowBackground">@null</item>
         <item name="android:background">@null</item>
         <item name="android:padding">0dp</item>
+        <item name="android:textColorPrimary">@color/primary_text_material_light</item>
     </style>
 
     <style name="MyCustomToolbarStyle" parent="Theme.AppCompat.NoActionBar">

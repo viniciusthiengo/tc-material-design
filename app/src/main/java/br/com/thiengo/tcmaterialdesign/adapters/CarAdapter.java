@@ -210,44 +210,53 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.MyViewHolder> {
             if( ivContextMenu != null ){
                 ivContextMenu.setOnClickListener(this);
             }
+            if( mRecyclerViewOnClickListenerHack != null ){
+                ivCar.setOnClickListener(this);
+                //mRecyclerViewOnClickListenerHack.onClickListener(itemView, getAdapterPosition());
+            }
         }
 
 
         @Override
         public void onClick(View v) {
-            
-            List<ContextMenuItem> itens = new ArrayList<>();
-            itens.add( new ContextMenuItem( R.drawable.ic_favorite, "Favorito" ) );
-            itens.add( new ContextMenuItem( R.drawable.ic_link, "Link Web" ) );
-            itens.add( new ContextMenuItem( R.drawable.ic_enterprise, "Empresa Vendas" ) );
-            itens.add( new ContextMenuItem( R.drawable.ic_email, "Email" ) );
-            itens.add( new ContextMenuItem( R.drawable.ic_discart, "Descartar" ) );
 
-            ContextMenuAdapter adapter = new ContextMenuAdapter( mContext, itens );
+            if( mRecyclerViewOnClickListenerHack == null ) {
+                List<ContextMenuItem> itens = new ArrayList<>();
+                itens.add(new ContextMenuItem(R.drawable.ic_favorite, "Favorito"));
+                itens.add(new ContextMenuItem(R.drawable.ic_link, "Link Web"));
+                itens.add(new ContextMenuItem(R.drawable.ic_enterprise, "Empresa Vendas"));
+                itens.add(new ContextMenuItem(R.drawable.ic_email, "Email"));
+                itens.add(new ContextMenuItem(R.drawable.ic_discart, "Descartar"));
 
-            ListPopupWindow listPopupWindow = new ListPopupWindow(mContext);
-            listPopupWindow.setAdapter( adapter );
-            listPopupWindow.setAnchorView(ivContextMenu);
-            listPopupWindow.setWidth((int) (240 * scale + 0.5f));
-            listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //Toast.makeText(mContext, getAdapterPosition() + " : " + position, Toast.LENGTH_SHORT).show();
+                ContextMenuAdapter adapter = new ContextMenuAdapter(mContext, itens);
+
+                ListPopupWindow listPopupWindow = new ListPopupWindow(mContext);
+                listPopupWindow.setAdapter(adapter);
+                listPopupWindow.setAnchorView(ivContextMenu);
+                listPopupWindow.setWidth((int) (240 * scale + 0.5f));
+                listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        //Toast.makeText(mContext, getAdapterPosition() + " : " + position, Toast.LENGTH_SHORT).show();
 
                     /*Intent intent = new Intent(mContext, CarActivity.class);
                     intent.putExtra("car", mList.get( getAdapterPosition() ));
                     mContext.startActivity(intent);*/
 
-                    if (position == 3) {
-                        Intent intent = new Intent(mContext, ContactActivity.class);
-                        intent.putExtra("car", mList.get( getAdapterPosition() ));
-                        mContext.startActivity(intent);
+                        if (position == 3) {
+                            Intent intent = new Intent(mContext, ContactActivity.class);
+                            intent.putExtra("car", mList.get(getAdapterPosition()));
+                            mContext.startActivity(intent);
+                        }
                     }
-                }
-            });
-            listPopupWindow.setModal(true);
-            listPopupWindow.getBackground().setAlpha(0);
-            listPopupWindow.show();
+                });
+                listPopupWindow.setModal(true);
+                listPopupWindow.getBackground().setAlpha(0);
+                listPopupWindow.show();
+            }
+            else{ // FOR SEARCHABLE ACTIVITY
+                mRecyclerViewOnClickListenerHack.onClickListener(v, getAdapterPosition());
+            }
         }
     }
 }

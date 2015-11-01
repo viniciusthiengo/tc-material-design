@@ -180,14 +180,14 @@ public class SearchableActivity extends AppCompatActivity implements RecyclerVie
         // TRANSITIONS
         if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
 
-            View ivCar = view.findViewById(R.id.iv_car);
-            View tvModel = view.findViewById(R.id.tv_model);
-            View tvBrand = view.findViewById(R.id.tv_brand);
+            View ivCar = ((View) view.getParent()).findViewById(R.id.iv_car);
+            View tvModel = ((View) view.getParent()).findViewById(R.id.tv_model);
+            View tvBrand = ((View) view.getParent()).findViewById(R.id.tv_brand);
 
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
                     Pair.create(ivCar, "element1"),
-                    Pair.create( tvModel, "element2" ),
-                    Pair.create( tvBrand, "element3" ));
+                    Pair.create(tvModel, "element2"),
+                    Pair.create(tvBrand, "element3"));
 
             startActivity(intent, options.toBundle() );
         }
