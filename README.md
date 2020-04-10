@@ -1,9 +1,7 @@
-TCMaterialDesign APP
+TCMaterialDesign APP (Java Android)
 ===========================================
 
-[English version](https://github.com/viniciusthiengo/tc-material-design/blob/master/README-EN.md)
-
-## Projeto
+### Projeto
 
 TCMaterialDesign é um APP desenvolvido nos exemplos em vídeo do [canal do YouTube Thiengo Calopsita](https://www.youtube.com/user/thiengoCalopsita) com intuito de apresentar a Android developers algumas features / libs que podem ser utilizadas no dev Android.
 
@@ -52,12 +50,15 @@ Abaixo a lista das libraries / compiles que estão sendo utilizados no projeto:
 * com.mcxiaoke.volley:library:1.0.17
 * com.google.code.gson:gson:2.3.1
 
+### Documentação em inglês
+
+Você pode também acessar a documentação do projeto em [English version](https://github.com/viniciusthiengo/tc-material-design/blob/master/README-EN.md).
+
 ## Onde acompanhar o conteúdo do Blog
 
 * [Blog Thiengo Calopsita](http://www.thiengo.com.br/)
 * [YouTube](https://www.youtube.com/user/thiengoCalopsita)
 * [Facebook](https://www.facebook.com/thiengoCalopsita)
-* [Google+](https://plus.google.com/+ThiengoCalopsita/posts)
 * [Twitter](https://twitter.com/thiengoCalops)
 * [LinkedIn](https://www.linkedin.com/pub/vin%C3%ADcius-thiengo/80/9b1/517)
 
